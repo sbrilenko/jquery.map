@@ -109,26 +109,30 @@
 						}
 					}
 				}
-			}
+			},
+            main:function()
+            {
+                whatMap.pathMap();
+                maxW=whatMap.maxW();
+                maxH=whatMap.maxH();
+                if(Math.round(Math.abs($this.parent().offset().left)>=maxW)) {$this.parent().css({left:(-1)*maxW})}
+                if(Math.round(Math.abs($this.parent().offset().top)>=maxH)) { $this.parent().css({top:(-1)*maxH}) }
+                $('#map').css({width:whatMap.returnMin_w(),height:whatMap.returnMin_h()});
+
+                begin_x=whatMap.returnAbsRoundDelKvadr($this.parent().offset().left,'x');
+                begin_y=whatMap.returnAbsRoundDelKvadr($this.parent().offset().top,'y');
+                if(begin_x*options.layerSize.w>Math.abs($this.parent().offset().left)) begin_x--;
+                if(begin_y*options.layerSize.h>Math.abs($this.parent().offset().top)) begin_y--;
+                var plus_one_w=whatMap.plus_one_w(whatMap.returnMin_w(),$this.parent().offset().left),
+                    plus_one_h=whatMap.plus_one_h(whatMap.returnMin_h(),$this.parent().offset().top);
+                whatMap.putImage(max_y,max_x,begin_y,begin_x,plus_one_h,plus_one_w);
+            }
 		};
         var $this = this;
         va_map=whatMap.date_sizon();
         $("<div id='map-back' style='position: absolute;z-index:1;background:url("+options.mapBack+");repeat;width:100%;height:100%;'></div>").insertAfter($this.parent());
 		/*code from resize function*/
-		whatMap.pathMap();
-	    maxW=whatMap.maxW();
-		maxH=whatMap.maxH();
-		if(Math.round(Math.abs($this.parent().offset().left)>=maxW)) {$this.parent().css({left:(-1)*maxW})}
-		if(Math.round(Math.abs($this.parent().offset().top)>=maxH)) { $this.parent().css({top:(-1)*maxH}) }
-		$('#map').css({width:whatMap.returnMin_w(),height:whatMap.returnMin_h()});
-
-		begin_x=whatMap.returnAbsRoundDelKvadr($this.parent().offset().left,'x');
-		begin_y=whatMap.returnAbsRoundDelKvadr($this.parent().offset().top,'y');
-		if(begin_x*options.layerSize.w>Math.abs($this.parent().offset().left)) begin_x--;
-		if(begin_y*options.layerSize.h>Math.abs($this.parent().offset().top)) begin_y--;
-		var plus_one_w=whatMap.plus_one_w(whatMap.returnMin_w(),$this.parent().offset().left),
-            plus_one_h=whatMap.plus_one_h(whatMap.returnMin_h(),$this.parent().offset().top);
-		whatMap.putImage(max_y,max_x,begin_y,begin_x,plus_one_h,plus_one_w);
+		whatMap.main();
 		/*viewport = document.querySelector("meta[name=viewport]");
           if (window.orientation == 90 || window.orientation == -90) {
             viewport.setAttribute('content', 'width=device-width, maximum-scale=1.0');
@@ -215,22 +219,7 @@
 	    clearTimeout(doit);
  		doit = setTimeout(function(){
         var isiPad = navigator.userAgent.match(/iPad/i) != null;
-        whatMap.pathMap();
-	    maxW=whatMap.maxW();
-		maxH=whatMap.maxH();
-		if(Math.round(Math.abs($this.parent().offset().left)>=maxW)) {$this.parent().css({left:(-1)*maxW});}
-		if(Math.round(Math.abs($this.parent().offset().top)>=maxH)) { $this.parent().css({top:(-1)*maxH});}
-		$('#map').css({width:whatMap.returnMin_w(),height:whatMap.returnMin_h()});
-      
-		begin_x=whatMap.returnAbsRoundDelKvadr($this.parent().offset().left,'x');
-		begin_y=whatMap.returnAbsRoundDelKvadr($this.parent().offset().top,'y');
-		if(begin_x*options.layerSize.w>Math.abs($this.parent().offset().left)) begin_x--;
-		if(begin_y*options.layerSize.h>Math.abs($this.parent().offset().top)) begin_y--;
-		var plus_one_w=whatMap.plus_one_w(whatMap.returnMin_w(),$this.parent().offset().left);
-		var plus_one_h=whatMap.plus_one_h(whatMap.returnMin_h(),$this.parent().offset().top);
-		if(plus_one_w>max_x) plus_one_w=max_x;
-		if(plus_one_h>max_y) plus_one_h=max_y;
-		whatMap.putImage(max_y,max_x,begin_y,begin_x,plus_one_h,plus_one_w);
+            whatMap.main();
 		} , 100)
 	})
 	}
