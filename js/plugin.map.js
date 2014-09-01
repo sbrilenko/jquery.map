@@ -1,15 +1,13 @@
-/*Created by Sergey Brilenko 
-* image of map have structure 
-*/
+/*Created by Sergey Brilenko*/
 (function( $ ){
 	$.fn.map = function(options){
 		options = $.extend({
 			mapLayersPath:'/map/', /* /map/ folder by default*/
 			startImage:null, /*null by default, map on start, if want image on start and go to map by click on start image: format - {path,width:[w,h]}*/
             mapSize:{w:1000,h:500},
-			center: [2164,1588],
 			typeImg:'jpg',
-            layerSize:{w:256,h:256}
+            layerSize:{w:256,h:256},
+            start:'cener'
 		}, options || {});
 		
 		var doit,
@@ -19,13 +17,17 @@
             max_x,max_y,
             map_ar={};
 		var whatMap={
+            getCenter:function()
+            {
+
+            },
 		    date_sizon:function() {return options.mapLayersPath;},
 		    return_min_body_w:function(){ return whatMap.rW();},
 		    rW:function(){return ('innerWidth' in window) ? window.innerWidth : document.body.offsetWidth;},
             rH:function(){return ('innerHeight' in window) ? window.innerHeight : document.body.offsetHeight;},
             repeatdateinpathmap:function(to_x,to_y,sp_w_,sp_h_)
             {
-					for(var i=0;i<=to_y;i++)
+                    for(var i=0;i<=to_y;i++)
 					{
 						for(var j=0;j<=to_x;j++)
 						{
@@ -86,29 +88,31 @@
 							    $('.img'+i+''+j).remove()
 						}
 					}
-                for(i=begin_y;i<=plus_one_h;i++)
-				{
-					for(j=begin_x;j<=plus_one_w;j++)
-					{
-						if($('img',$this).is('.img'+i+''+j))
-						{
-						    if(va_map==whatMap.date_sizon())
-                                $('.img'+i+''+j).attr('src',va_map+options.typeImg+'/'+i+'_'+j+'.'+options.typeImg).css({border:'0',margin:'0',padding:'0',position:'absolute',left:j*options.layerSize.w,top:i*options.layerSize.h,width:map_ar[i+'_'+j]['w'],height:map_ar[i+'_'+j]['h']});
-							else
-                                $('.img'+i+''+j).attr('src',whatMap.date_sizon()+options.typeImg+'/'+i+'_'+j+'.'+options.typeImg).css({border:'0',margin:'0',padding:'0',position:'absolute',left:j*options.layerSize.w,top:i*options.layerSize.h,width:map_ar[i+'_'+j]['w'],height:map_ar[i+'_'+j]['h']})
-                        }
-						else
-						{
-                            var imageObj = document.createElement('img');
-                            if(va_map==whatMap.date_sizon())
-                                imageObj.src=''+va_map+options.typeImg+'/'+i+'_'+j+'.'+options.typeImg+'?anti_cache=' + whatMap.date_sizon();
+                    for(i=begin_y;i<=plus_one_h;i++)
+                    {
+                        for(j=begin_x;j<=plus_one_w;j++)
+                        {
+                            if($('img',$this).is('.img'+i+''+j))
+                            {
+                                if(va_map==whatMap.date_sizon())
+                                    $('.img'+i+''+j).attr('src',va_map+options.typeImg+'/'+i+'_'+j+'.'+options.typeImg).css({border:'0',margin:'0',padding:'0',position:'absolute',left:j*options.layerSize.w,top:i*options.layerSize.h,width:map_ar[i+'_'+j]['w'],height:map_ar[i+'_'+j]['h']});
+                                else
+                                    $('.img'+i+''+j).attr('src',whatMap.date_sizon()+options.typeImg+'/'+i+'_'+j+'.'+options.typeImg).css({border:'0',margin:'0',padding:'0',position:'absolute',left:j*options.layerSize.w,top:i*options.layerSize.h,width:map_ar[i+'_'+j]['w'],height:map_ar[i+'_'+j]['h']})
+                            }
                             else
-                                imageObj.src=''+whatMap.date_sizon()+options.typeImg+'/'+i+'_'+j+'.'+options.typeImg+'?anti_cache=' + va_map;
-                            //imageObj.onload = function(){}
-							$this.append('<img class="img'+i+''+j+'" style="border:0;margin:0;padding:0;position:absolute;left:'+j*options.layerSize.w+'px;top:'+i*options.layerSize.h+'px;width:'+map_ar[i+'_'+j]['w']+'px;height:'+map_ar[i+'_'+j]['h']+'px;" src="'+imageObj.src+'" />');
-						}
-					}
-				}
+                            {
+                                var imageObj = document.createElement('img');
+                                if(va_map==whatMap.date_sizon())
+                                    imageObj.src=''+va_map+options.typeImg+'/'+i+'_'+j+'.'+options.typeImg+'?anti_cache=' + whatMap.date_sizon();
+                                else
+                                    imageObj.src=''+whatMap.date_sizon()+options.typeImg+'/'+i+'_'+j+'.'+options.typeImg+'?anti_cache=' + va_map;
+                                //imageObj.onload = function(){}
+                                $this.append('<img class="img'+i+''+j+'" style="border:0;margin:0;padding:0;position:absolute;left:'+j*options.layerSize.w+'px;top:'+i*options.layerSize.h+'px;width:'+map_ar[i+'_'+j]['w']+'px;height:'+map_ar[i+'_'+j]['h']+'px;" src="'+imageObj.src+'" />');
+                            }
+                        }
+                    }
+
+
 			},
             main:function()
             {
@@ -125,7 +129,19 @@
                 if(begin_y*options.layerSize.h>Math.abs($this.parent().offset().top)) begin_y--;
                 var plus_one_w=whatMap.plus_one_w(whatMap.returnMin_w(),$this.parent().offset().left),
                     plus_one_h=whatMap.plus_one_h(whatMap.returnMin_h(),$this.parent().offset().top);
-                whatMap.putImage(max_y,max_x,begin_y,begin_x,plus_one_h,plus_one_w);
+                if(options.start=="center")
+                {
+                    var left=(options.mapSize.w/2)-(whatMap.rW()/2),top=(options.mapSize.h/2)-(whatMap.rH()/2);
+                    var from_x=Math.floor(left/options.layerSize.w),from_y=Math.floor(top/options.layerSize.h);
+                    var to_x_=from_x+Math.floor(whatMap.rW()/options.layerSize.w)+ 1,
+                        to_y_=from_y+Math.floor(whatMap.rH()/options.layerSize.h)+ 1;
+                    $this.parent().css({left:(-1)*left,top:(-1)*top});
+                    whatMap.putImage(max_y,max_x,from_y,from_x,to_y_,to_x_);
+                }
+                else
+                {
+                    whatMap.putImage(max_y,max_x,begin_y,begin_x,plus_one_h,plus_one_w);
+                }
             }
 		};
         var $this = this;
