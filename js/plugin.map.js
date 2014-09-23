@@ -8,7 +8,8 @@
 			typeImg:'jpg',
             layerSize:{w:256,h:256},
             start:'cener',
-            points:[{x:150,y:150,title:'point 1',html:'<div style="position: absolute;width:150px;">sdf safdf sdfdasdf sdaf<br />sdasdadsdsadasd</div>',pointclass:'pointclass1',htmlclass:''}]
+            points:[]
+
 		}, options || {});
 		
 		var doit,
@@ -138,21 +139,6 @@
 			},
             main:function()
             {
-                if(Object.size(options.points)>0)
-                {
-                    $.each(options.points, function( index, value ) {
-                        if(value.x>0 && value.y>0)
-                        {
-                            var unqid=uniqueid();
-                            $('#map').parent().append("<div id='"+unqid+"' style='position: absolute;top:"+value.y+"px;left:"+value.x+"px;' class='"+value.pointclass+"'></div>");
-                            $('#'+unqid).on('click',function()
-                            {
-                                $(this).append(value.html)
-                            })
-                        }
-                    });
-                }
-
                 whatMap.pathMap();
                 maxW=whatMap.maxW();
                 maxH=whatMap.maxH();
@@ -186,6 +172,30 @@
         $("<div id='map-back' style='position: absolute;z-index:1;background:url("+options.mapBack+");repeat;width:100%;height:100%;'></div>").insertAfter($this.parent());
 		/*code from resize function*/
 		whatMap.main();
+        if(Object.size(options.points)>0)
+        {
+            $.each(options.points, function( index, value ) {
+                if(value.x>0 && value.y>0)
+                {
+                    var unqid=uniqueid();
+                    $("<div id='"+unqid+"' style='z-index:99999999;position: absolute;top:"+value.y+"px;left:"+value.x+"px;' class='"+value.pointclass+"'></div>").insertBefore($('#map'));
+                    $('#'+unqid).on('click',function()
+                    {
+                        if($('#'+unqid+" >div").length>0)
+                        {
+                            $('#'+unqid+" >div").remove();
+                        }
+                        else
+                        {
+                            $(this).append("<div class='bubble'>"+value.html+"</div>")
+                            var h=(-1)*(parseInt($('#'+unqid+" >div").css("height"))+20);
+                            $('#'+unqid+" >div").css("margin-top",h+"px");
+                        }
+
+                    })
+                }
+            });
+        }
 		/*viewport = document.querySelector("meta[name=viewport]");
           if (window.orientation == 90 || window.orientation == -90) {
             viewport.setAttribute('content', 'width=device-width, maximum-scale=1.0');
