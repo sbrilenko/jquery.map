@@ -4,20 +4,21 @@
 	<title>
 	map Plugin
 	</title>
+    <link rel="stylesheet" href="css/style.css">
 	<script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/plugin.map.js"></script>
 	<script type="text/javascript">
-	$( document ).ready(function() {
-    $("#map").map({
-		mapLayersPath:'new_map/',
-		typeImg:'jpg',
-        mapSize:{w:2720,h:1935},
-        mapBack:'img/back.jpg',
-        layerSize:{w:256,h:256},
-        start:'center'
+        $( document ).ready(function() {
+            $("#map").map({
+                mapLayersPath:'new_map/',
+                typeImg:'jpg',
+                mapSize:{w:2720,h:1935},
+                mapBack:'img/back.jpg',
+                layerSize:{w:256,h:256},
+                start:'center'
 
-		});
-	});
+            });
+        });
 	</script>
 </head>
 <body style="padding:0px;margin:0;">

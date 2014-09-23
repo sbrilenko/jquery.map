@@ -7,7 +7,8 @@
             mapSize:{w:1000,h:500},
 			typeImg:'jpg',
             layerSize:{w:256,h:256},
-            start:'cener'
+            start:'cener',
+            points:[{x:150,y:150,title:'point 1',html:'<div style="position: absolute;width:150px;">sdf safdf sdfdasdf sdaf<br />sdasdadsdsadasd</div>',pointclass:'pointclass1',htmlclass:''}]
 		}, options || {});
 		
 		var doit,
@@ -16,6 +17,27 @@
             maxH,
             max_x,max_y,
             map_ar={};
+        Object.size = function(obj) {
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
+        };
+        function uniqueid(){
+            // always start with a letter (for DOM friendlyness)
+            var idstr=String.fromCharCode(Math.floor((Math.random()*25)+65));
+            do {
+                // between numbers and characters (48 is 0 and 90 is Z (42-48 = 90)
+                var ascicode=Math.floor((Math.random()*42)+48);
+                if (ascicode<58 || ascicode>64){
+                    // exclude all chars between : (58) and @ (64)
+                    idstr+=String.fromCharCode(ascicode);
+                }
+            } while (idstr.length<32);
+
+            return (idstr);
+        }
 		var whatMap={
             getCenter:function()
             {
@@ -116,6 +138,21 @@
 			},
             main:function()
             {
+                if(Object.size(options.points)>0)
+                {
+                    $.each(options.points, function( index, value ) {
+                        if(value.x>0 && value.y>0)
+                        {
+                            var unqid=uniqueid();
+                            $('#map').parent().append("<div id='"+unqid+"' style='position: absolute;top:"+value.y+"px;left:"+value.x+"px;' class='"+value.pointclass+"'></div>");
+                            $('#'+unqid).on('click',function()
+                            {
+                                $(this).append(value.html)
+                            })
+                        }
+                    });
+                }
+
                 whatMap.pathMap();
                 maxW=whatMap.maxW();
                 maxH=whatMap.maxH();
