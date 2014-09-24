@@ -165,6 +165,11 @@
                 {
                     whatMap.putImage(max_y,max_x,begin_y,begin_x,plus_one_h,plus_one_w);
                 }
+            },
+            goto:function(selector,x,y)
+            {
+                var selectorx=selector.css('width'),selectory=selector.css('height');
+
             }
 		};
         var $this = this;
@@ -195,6 +200,13 @@
                     })
                 }
             });
+        }
+        if(options.type=="game")
+        {
+            if(options.playerstart)
+            {
+                $("<div id='player' style='z-index:99999999;position: absolute;top:"+options.playerstart.y+"px;left:"+options.playerstart.x+"px;'></div>").insertBefore($('#map'));
+            }
         }
 		/*viewport = document.querySelector("meta[name=viewport]");
           if (window.orientation == 90 || window.orientation == -90) {

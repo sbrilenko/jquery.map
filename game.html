@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>
+	map Plugin
+	</title>
+    <link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/plugin.map.js"></script>
+	<script type="text/javascript">
+        $( document ).ready(function() {
+            var posx= 0,posy=0;
+            /*explosion*/
+            $('.explosion').css('background-position','-'+posx+'px -'+posy+'px')
+            setInterval(function() {
+                posx=(-1)*parseInt($('.explosion').css('background-position-x'));
+                posy=(-1)*parseInt($('.explosion').css('background-position-y'));
+                posx+=96;
+                if(posx==480) { posx=0;
+                    posy+=96;
+                    if(posy==288) posy=0;
+                }
+                $('.explosion').css('background-position','-'+posx+'px -'+posy+'px')
+            }, 100);
+            /*man*/
+            var posx1= 0,posy1=0;
+            $('.man').css('background-position',posx1+'px '+posy1+'px')
+            setInterval(function() {
+                posx1=(-1)*(parseInt($('.man').css('background-position-x'))+64);
+                if(posx1==512) { posx1=0;}
+                $('.man').css('background-position',posx1+'px '+posy1+'px')
+            }, 100);
+
+            $("#map").map({
+                mapLayersPath:'game_map/',
+                typeImg:'jpg',
+                mapSize:{w:2720,h:1935},
+                mapBack:'img/back.jpg',
+                layerSize:{w:256,h:256},
+                start:'center',
+                points:[{x:1000,y:1000,title:'point 1',html:'<div>BOOM!<br />BOOM!!</div>',pointclass:'explosion',htmlclass:''},
+                    {x:1300,y:800,title:'couns 1',html:'<div>RUUUUN!!!!!!!!!!!!</div>',pointclass:'man',htmlclass:''}],
+                type:"game",
+                player:[{top:{sprite:"img/top.png",sprite_count:5,sprite_timeout:100}},
+                                                {bottom:{sprite:"img/bottom.png",sprite_count:5,sprite_timeout:100}},
+                                                {left:{sprite:"img/left.png",sprite_count:5,sprite_timeout:100}},
+                                                {right:{sprite:"img/right.png",sprite_count:5,sprite_timeout:100}}],
+                playerstart:{x:1500,y:1000}
+            });
+        });
+	</script>
+</head>
+<body style="padding:0px;margin:0;">
+	<div style="left:0;top:0;overflow:hidden;position:absolute;width: 100%;height: 100%;">
+		<div style="position:absolute;z-index:2;">
+			<div id="map" style="position:absolute;left:0;top:0;"></div>
+		</div>
+        <!--<div id="map-back"></div>-->
+	</div>	
+</body>
+</html>
