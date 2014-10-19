@@ -32,7 +32,7 @@
             }, 100);
 
             $("#map").map({
-                mapLayersPath:'game_map/',
+                mapLayersPath:'new_map/',
                 typeImg:'jpg',
                 mapSize:{w:2720,h:1935},
                 mapBack:'img/back.jpg',
@@ -41,11 +41,11 @@
                 points:[{x:1000,y:1000,title:'point 1',html:'<div>BOOM!<br />BOOM!!</div>',pointclass:'explosion',htmlclass:''},
                     {x:1300,y:800,title:'couns 1',html:'<div>RUUUUN!!!!!!!!!!!!</div>',pointclass:'man',htmlclass:''}],
                 type:"game",
-                player:[{top:{sprite:"img/top.png",sprite_count:5,sprite_timeout:100}},
-                                                {bottom:{sprite:"img/bottom.png",sprite_count:5,sprite_timeout:100}},
-                                                {left:{sprite:"img/left.png",sprite_count:5,sprite_timeout:100}},
-                                                {right:{sprite:"img/right.png",sprite_count:5,sprite_timeout:100}}],
-                playerstart:{x:1500,y:1000}
+                player:[{top:{sprite:"img/top.png",sprite_count:3,sprite_timeout:100}},
+                        {bottom:{sprite:"img/bottom.png",sprite_count:3,sprite_timeout:100}},
+                        {left:{sprite:"img/left.png",sprite_count:3,sprite_timeout:100}},
+                        {right:{sprite:"img/right.png",sprite_count:3,sprite_timeout:100}}],
+                playerstart:{x:1500,y:1000,img:"img/startimage.png"}
             });
         });
 	</script>

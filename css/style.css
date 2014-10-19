@@ -14,3 +14,8 @@
     height:96px;
     background: url(../img/man.png) 0 0;
 }
+#player
+{
+    width:45px;
+    height:63px;
+}

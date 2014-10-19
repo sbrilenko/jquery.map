@@ -14,10 +14,12 @@
 		
 		var doit,
             va_map,
+            move=false,
             maxW,
             maxH,
             max_x,max_y,
-            map_ar={};
+            map_ar={},
+            player;
         Object.size = function(obj) {
             var size = 0, key;
             for (key in obj) {
@@ -102,10 +104,10 @@
 			plus_one_h:function(min_h,top){return (min_h%options.layerSize.h<options.layerSize.h) ? Math.floor((Math.abs(top)+min_h)/options.layerSize.h)+1 : Math.floor((Math.abs(top)+min_h)/options.layerSize.h);},
 			putImage:function(max_y,max_x,begin_y,begin_x,plus_one_h,plus_one_w)
 			{
-                var i= 0,j=0;
-				for(i=0;i<=max_y;i++)
+                var i=0,j=0;
+				for(i;i<=max_y;i++)
 					{
-						for(j=0;j<=max_x;j++)
+						for(j;j<=max_x;j++)
 						{
 							if((i<begin_y || i>plus_one_h) &&(j<begin_x || j>plus_one_w))
 							    $('.img'+i+''+j).remove()
@@ -205,7 +207,8 @@
         {
             if(options.playerstart)
             {
-                $("<div id='player' style='z-index:99999999;position: absolute;top:"+options.playerstart.y+"px;left:"+options.playerstart.x+"px;'></div>").insertBefore($('#map'));
+                $("<div id='player' style='background:url("+options.playerstart.img+")no-repeat;;z-index:99999999;position: absolute;top:"+options.playerstart.y+"px;left:"+options.playerstart.x+"px;'></div>").insertBefore($('#map'));
+                player=$("#player");
             }
         }
 		/*viewport = document.querySelector("meta[name=viewport]");
@@ -253,8 +256,9 @@
 				ms_y=whatMap.m_t_down_y(e)
 			}
 		}).on( event_id_move,function(e){
-		    if(down)
-			{			
+            if(down)
+			{
+                move=true;
                 left=parseInt($this.offset().left) +(whatMap.m_t_down_x(e)-ms_x);
                 top=parseInt($this.offset().top)+(whatMap.m_t_down_y(e)-ms_y);
                 if(left>0||top>0||Math.abs(left)>maxW||Math.abs(top)>maxH) {}
@@ -276,7 +280,212 @@
 			}
 	   })
 		.on(event_id_end,function(e){
+                if(!move && options.player)
+                {
+                    var t_pl=player.offset().top;
+                    var l_pl=player.offset().left;
+                    var x=whatMap.m_t_down_x(e)
+                    var y=whatMap.m_t_down_y(e)
+                    var dif_x=parseInt(x-l_pl)*(-1);
+                    var dif_y=parseInt(y-t_pl)*(-1);
+                    var up=down=left=right=false
+                    if(x<l_pl) left=true;
+                    else right=true;
+                    if(y<t_pl) up=true;
+                    else down=true;
+                    var first_up_down=false;
+                    if(parseInt(Math.random() * 2)==1) //first up or down
+                    {
+                        first_up_down=true;
+                    }
+                    if(first_up_down)
+                    {
+                        if(up)
+                        {
+                            if(left)
+                            {
+                                var posx1=-45
+                                player.css('backgroundImage',"url("+options.player[0].top.sprite+")")
+                                var inter=setInterval(function() {
+                                    posx1+=45;
+                                    if(posx1==135) {posx1=0;}
+                                    player.css('background-position',(-1)*posx1+'px 0px')
+                                }, 100);
+                                player.animate({top:parseInt($this.offset().top)*-1+whatMap.m_t_down_y(e)},1000,function(){
+                                    clearInterval(inter);
+                                    player.css('backgroundImage',"url("+options.player[2].left.sprite+")")
+                                    posx1=-45;
+                                    inter=setInterval(function() {
+                                        posx1+=45;
+                                        if(posx1==135) { posx1=0;}
+                                        player.css('background-position',(-1)*posx1+'px 0px')
+                                    }, 100);
+                                    player.animate({left:parseInt($this.offset().left)*-1+whatMap.m_t_down_x(e)},1000,function(){clearInterval(inter);$('#player').css({backgroundPosition:'0 0',backgroundImage:"url("+options.playerstart.img+")"})}) })
+                            }
+                            else //right
+                            {
+                                var posx1=-45
+                                player.css('backgroundImage',"url("+options.player[0].top.sprite+")")
+                                var inter=setInterval(function() {
+                                    posx1+=45;
+                                    if(posx1==135) {posx1=0;}
+                                    player.css('background-position',(-1)*posx1+'px 0px')
+                                }, 100);
+                                player.animate({top:parseInt($this.offset().top)*-1+whatMap.m_t_down_y(e)},1000,function(){
+                                    clearInterval(inter);
+                                    player.css('backgroundImage',"url("+options.player[3].right.sprite+")")
+                                    posx1=-45;
+                                    inter=setInterval(function() {
+                                        posx1+=45;
+                                        if(posx1==135) { posx1=0;}
+                                        player.css('background-position',(-1)*posx1+'px 0px')
+                                    }, 100);
+                                    player.animate({left:parseInt($this.offset().left)*-1+whatMap.m_t_down_x(e)},1000,function(){clearInterval(inter);$('#player').css({backgroundPosition:'0 0',backgroundImage:"url("+options.playerstart.img+")"})}) })
+                            }
+                        }
+                        else
+                        {
+                            if(left)
+                            {
+                                var posx1=-45
+                                player.css('backgroundImage',"url("+options.player[1].bottom.sprite+")")
+                                var inter=setInterval(function() {
+                                    posx1+=45;
+                                    if(posx1==135) {posx1=0;}
+                                    player.css('background-position',(-1)*posx1+'px 0px')
+                                }, 100);
+                                player.animate({top:parseInt($this.offset().top)*-1+whatMap.m_t_down_y(e)},1000,function(){
+                                    clearInterval(inter);
+                                    player.css('backgroundImage',"url("+options.player[2].left.sprite+")")
+                                    posx1=-45;
+                                    inter=setInterval(function() {
+                                        posx1+=45;
+                                        if(posx1==135) { posx1=0;}
+                                        player.css('background-position',(-1)*posx1+'px 0px')
+                                    }, 100);
+                                    player.animate({left:parseInt($this.offset().left)*-1+whatMap.m_t_down_x(e)},1000,function(){clearInterval(inter);$('#player').css({backgroundPosition:'0 0',backgroundImage:"url("+options.playerstart.img+")"})}) })
+                            }
+                            else //right
+                            {
+
+                                var posx1=-45
+                                player.css('backgroundImage',"url("+options.player[1].bottom.sprite+")")
+                                var inter=setInterval(function() {
+                                    posx1+=45;
+                                    if(posx1==135) {posx1=0;}
+                                    player.css('background-position',(-1)*posx1+'px 0px')
+                                }, 100);
+                                player.animate({top:parseInt($this.offset().top)*-1+whatMap.m_t_down_y(e)},1000,function(){
+                                    clearInterval(inter);
+                                    player.css('backgroundImage',"url("+options.player[3].right.sprite+")")
+                                    posx1=-45;
+                                    inter=setInterval(function() {
+                                        posx1+=45;
+                                        if(posx1==135) { posx1=0;}
+                                        player.css('background-position',(-1)*posx1+'px 0px')
+                                    }, 100);
+                                    player.animate({left:parseInt($this.offset().left)*-1+whatMap.m_t_down_x(e)},1000,function(){clearInterval(inter);$('#player').css({backgroundPosition:'0 0',backgroundImage:"url("+options.playerstart.img+")"})}) })
+
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if(left)
+                        {
+                            if(up)
+                            {
+
+                                var posx1=-45
+                                player.css('backgroundImage',"url("+options.player[2].left.sprite+")")
+                                var inter=setInterval(function() {
+                                    posx1+=45;
+                                    if(posx1==135) {posx1=0;}
+                                    player.css('background-position',(-1)*posx1+'px 0px')
+                                }, 100);
+                                player.animate({left:parseInt($this.offset().left)*-1+whatMap.m_t_down_x(e)},1000,function(){
+                                    clearInterval(inter);
+                                    player.css('backgroundImage',"url("+options.player[0].top.sprite+")")
+                                    posx1=-45;
+                                    inter=setInterval(function() {
+                                        posx1+=45;
+                                        if(posx1==135) { posx1=0;}
+                                        player.css('background-position',(-1)*posx1+'px 0px')
+                                    }, 100);
+                                    player.animate({top:parseInt($this.offset().top)*-1+whatMap.m_t_down_y(e)},1000,function(){clearInterval(inter);$('#player').css({backgroundPosition:'0 0',backgroundImage:"url("+options.playerstart.img+")"})}) })
+                            }
+                            else //down
+                            {
+                                var posx1=-45
+                                player.css('backgroundImage',"url("+options.player[2].left.sprite+")")
+                                var inter=setInterval(function() {
+                                    posx1+=45;
+                                    if(posx1==135) {posx1=0;}
+                                    player.css('background-position',(-1)*posx1+'px 0px')
+                                }, 100);
+                                player.animate({left:parseInt($this.offset().left)*-1+whatMap.m_t_down_x(e)},1000,function(){
+                                    clearInterval(inter);
+                                    player.css('backgroundImage',"url("+options.player[1].bottom.sprite+")")
+                                    posx1=-45;
+                                    inter=setInterval(function() {
+                                        posx1+=45;
+                                        if(posx1==135) { posx1=0;}
+                                        player.css('background-position',(-1)*posx1+'px 0px')
+                                    }, 100);
+                                    player.animate({top:parseInt($this.offset().top)*-1+whatMap.m_t_down_y(e)},1000,function(){clearInterval(inter);$('#player').css({backgroundPosition:'0 0',backgroundImage:"url("+options.playerstart.img+")"})}) })
+                            }
+                        }
+                        else
+                        {
+                            if(up)
+                            {
+                                var posx1=-45
+                                player.css('backgroundImage',"url("+options.player[3].right.sprite+")")
+                                var inter=setInterval(function() {
+                                    posx1+=45;
+                                    if(posx1==135) {posx1=0;}
+                                    player.css('background-position',(-1)*posx1+'px 0px')
+                                }, 100);
+                                player.animate({left:parseInt($this.offset().left)*-1+whatMap.m_t_down_x(e)},1000,function(){
+                                    clearInterval(inter);
+                                    player.css('backgroundImage',"url("+options.player[0].top.sprite+")")
+                                    posx1=-45;
+                                    inter=setInterval(function() {
+                                        posx1+=45;
+                                        if(posx1==135) { posx1=0;}
+                                        player.css('background-position',(-1)*posx1+'px 0px')
+                                    }, 100);
+                                    player.animate({top:parseInt($this.offset().top)*-1+whatMap.m_t_down_y(e)},1000,function(){clearInterval(inter);$('#player').css({backgroundPosition:'0 0',backgroundImage:"url("+options.playerstart.img+")"})}) })
+                            }
+                            else //down
+                            {
+                                var posx1=-45
+                                player.css('backgroundImage',"url("+options.player[3].right.sprite+")")
+                                var inter=setInterval(function() {
+                                    posx1+=45;
+                                    if(posx1==135) {posx1=0;}
+                                    player.css('background-position',(-1)*posx1+'px 0px')
+                                }, 100);
+                                player.animate({left:parseInt($this.offset().left)*-1+whatMap.m_t_down_x(e)},1000,function(){
+                                    clearInterval(inter);
+                                    player.css('backgroundImage',"url("+options.player[1].bottom.sprite+")")
+                                    posx1=-45;
+                                    inter=setInterval(function() {
+                                        posx1+=45;
+                                        if(posx1==135) { posx1=0;}
+                                        player.css('background-position',(-1)*posx1+'px 0px')
+                                    }, 100);
+                                    player.animate({top:parseInt($this.offset().top)*-1+whatMap.m_t_down_y(e)},1000,function(){clearInterval(inter);$('#player').css({backgroundPosition:'0 0',backgroundImage:"url("+options.playerstart.img+")"})}) })
+                            }
+                        }
+                    }
+                    first_up_down=false
+                    up=down=left=right=false;
+
+                }
 			down=false;
+            move=false;
 		}).on(event_id_leave,function()
 		{down=false;})
 		down2=false;
