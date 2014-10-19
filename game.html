@@ -9,28 +9,6 @@
 	<script type="text/javascript" src="js/plugin.map.js"></script>
 	<script type="text/javascript">
         $( document ).ready(function() {
-            var posx= 0,posy=0;
-            /*explosion*/
-            $('.explosion').css('background-position','-'+posx+'px -'+posy+'px')
-            setInterval(function() {
-                posx=(-1)*parseInt($('.explosion').css('background-position-x'));
-                posy=(-1)*parseInt($('.explosion').css('background-position-y'));
-                posx+=96;
-                if(posx==480) { posx=0;
-                    posy+=96;
-                    if(posy==288) posy=0;
-                }
-                $('.explosion').css('background-position','-'+posx+'px -'+posy+'px')
-            }, 100);
-            /*man*/
-            var posx1= 0,posy1=0;
-            $('.man').css('background-position',posx1+'px '+posy1+'px')
-            setInterval(function() {
-                posx1=(-1)*(parseInt($('.man').css('background-position-x'))+64);
-                if(posx1==512) { posx1=0;}
-                $('.man').css('background-position',posx1+'px '+posy1+'px')
-            }, 100);
-
             $("#map").map({
                 mapLayersPath:'new_map/',
                 typeImg:'jpg',
