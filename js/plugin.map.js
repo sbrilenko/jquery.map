@@ -1,4 +1,4 @@
-/*Created by Sergey Brilenko*/
+
 (function( $ ){
 	$.fn.map = function(options){
 		options = $.extend({
